@@ -113,6 +113,7 @@ public class ShootingParticle {
             x += cosTheta * speed * deltaTime;
             y += sinTheta * speed * deltaTime;
 
+
             if (x + w < 0 || x > Constants.SCREEN_SIZE.getWidth()
                 || y + h < 0 || y > Constants.SCREEN_SIZE.getHeight()) {
                 shooted = false;

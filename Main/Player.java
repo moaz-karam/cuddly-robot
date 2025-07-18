@@ -207,19 +207,16 @@ public class Player implements PlayerInterface {
 
 
 
-            ShootingParticle sp = ammo[Math.abs(timer) % ammoNumber];
 
-
-            xF -= sp.getW() / 2;
-            yF -= sp.getH() / 2;
-
-            double xDiff = xF - (x + 0.5 * (w - sp.getW()));
-            double yDiff = yF - (y + 0.5 * (h - sp.getH()));
+            double xDiff = xF - (x + 0.5 * w);
+            double yDiff = yF - (y + 0.5 * h);
 
             double displacement = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
 
             if (displacement > 36) {
                 
+                ShootingParticle sp = ammo[Math.abs(timer) % ammoNumber];
+
                 double cosTheta = xDiff / displacement;
                 double sinTheta = yDiff / displacement;
 
@@ -268,22 +265,6 @@ public class Player implements PlayerInterface {
                 lastBulletTime = System.nanoTime();
             }
 
-            
-
-
-
-
-
-            // ammo[Math.abs(timer) % ammoNumber].shoot(xF, yF);
-            // timer += 1;
-
-            // ammo[Math.abs(timer) % ammoNumber].shoot(xF + 50, yF + 50);
-            // timer += 1;
-
-            // ammo[Math.abs(timer) % ammoNumber].shoot(xF - 5, yF - 50);
-            // timer += 1;
-
-
         }
 
     }
@@ -294,5 +275,4 @@ public class Player implements PlayerInterface {
     public int getAmmoNumber() {
         return ammoNumber;
     }
-
 }

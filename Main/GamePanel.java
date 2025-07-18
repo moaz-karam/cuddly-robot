@@ -24,6 +24,7 @@ public class GamePanel extends JPanel {
         this.addKeyListener(new KeyBoard(player, this));
 
         this.addMouseListener(new Mouse(this));
+        this.addMouseMotionListener(new Mouse(this));
 
         this.setBackground(Color.darkGray);
         this.setMinimumSize(Constants.SCREEN_SIZE);
