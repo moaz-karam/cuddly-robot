@@ -10,6 +10,11 @@ public class GamePanel extends JPanel {
 
 
     private Player player;
+    private Enemy[] enemies;
+    private final int enemiesNumber = 20;
+    private long lastEnemySpawn;
+
+
     private boolean isShooting;
     private Point shootingPoint;
 
@@ -19,7 +24,8 @@ public class GamePanel extends JPanel {
 
         player = new Player();
         shootingPoint = new Point();
-
+        enemies = new Enemy[enemiesNumber];
+        lastEnemySpawn = 0;
 
         this.addKeyListener(new KeyBoard(player, this));
 
@@ -66,8 +72,17 @@ public class GamePanel extends JPanel {
         shootingPoint.setLocation(x, y);
         isShooting = true;
     }
+
     public void stopShooting() {
         isShooting = false;
+    }
+
+    public void spawnEnemy() {
+
+        if ((System.nanoTime() - lastEnemySpawn) / 1_000_000_000.0 >= 0.5) {
+            
+        }
+
     }
 
 

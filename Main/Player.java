@@ -53,7 +53,14 @@ public class Player implements PlayerInterface {
      */
     private int bulletsPerShot;
     private long lastBulletTime;
+
+    /*
+     * 
+     * collision related
+     * 
+     */
     
+     private double health;
 
 
     public Player() {
@@ -204,8 +211,6 @@ public class Player implements PlayerInterface {
 
         if ((System.nanoTime() - lastBulletTime) / 1_000_000_000.0 >= Constants.TIME_BETWEEN_BULLETS) {
             
-
-
 
 
             double xDiff = xF - (x + 0.5 * w);
