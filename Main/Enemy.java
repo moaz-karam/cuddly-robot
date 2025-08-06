@@ -46,28 +46,28 @@ public class Enemy {
     private double health;
     private Color color;
     
-    private Player player;
 
-
-    public Enemy(Player player, int type) {
+    public Enemy(int type) {
 
         x = 0;
         y = 0;
 
 
-        w = 40;
-        h = 40;
+
+        double randomDimension = System.nanoTime() % 101 + 30;
+
+        w = randomDimension;
+        h = randomDimension;
 
         speed = Constants.SPEED;
 
-        activated = true;
+        activated = false;
         this.type = type;
 
         health = 100;
         color = Color.GREEN;
-
-        this.player = player;
     }
+
 
 
 
@@ -92,25 +92,76 @@ public class Enemy {
 
 
 
+    public void changeType(int type) {
+        this.type = type;
+    }
 
     public boolean isActivated() {
         return activated;
     }
 
-    public void activate() {
+    public void activate(double x1, double y1) {
+
+        x = x1;
+        y = y1;
+
         activated = true;
+        health = 100;
+        color = Color.GREEN;
+
+        double randomDimension = System.nanoTime() % 81 + 50;
+
+        w = randomDimension;
+        h = randomDimension;
     }
 
-    public void update(double deltaTime) {
+    public void activate(double x1, double y1, double w1, double h1) {
+
+        x = x1;
+        y = y1;
+
+        activated = true;
+        health = 100;
+        color = Color.GREEN;
+
+        w = w1;
+        h = h1;
+
+    }
+
+    public void deactivate() {
+        activated = false;
+        health = 100;
+        color = Color.GREEN;
+    }
+
+    public void getHit() {
+        if (health > 0) {
+            color = color.darker();
+            health -= Constants.BULLET_DAMAGE;
+        }
+        else {
+            activated = false;
+            Player.addToScore(1);
+        }
+    }
+
+    private void split() {
+
+    }
+
+
+
+    public void update(Player player, double deltaTime) {
 
         if (this.type == Enemy.FOLLOWING) {
-            updateFollowing(deltaTime);
+            updateFollowing(player, deltaTime);
         }
         
     }
 
 
-    private void updateFollowing(double deltaTime) {
+    private void updateFollowing(Player player, double deltaTime) {
 
         double xPlayer = player.getX() + player.getW() * 0.5;
         double yPlayer = player.getY() + player.getH() * 0.5;

@@ -1,19 +1,21 @@
 package Main;
 
+import java.awt.Color;
+
 public class Player implements PlayerInterface {
-    
+
     /*
-     * 
-     * Player properties, and methods are written in the PlayerInterface interface 
-     * 
+     *
+     * Player properties, and methods are written in the PlayerInterface interface
+     *
      */
 
     /*
      *
-     * 
+     *
      *  position variables
-     * 
-     * 
+     *
+     *
      */
     private double x;
     private double y;
@@ -22,10 +24,10 @@ public class Player implements PlayerInterface {
     private double speed;
 
     /*
-     * 
-     * 
+     *
+     *
      *  movement control variables
-     * 
+     *
      */
 
     private int right;
@@ -34,33 +36,36 @@ public class Player implements PlayerInterface {
     private int down;
 
     /*
-     * 
-     * 
+     *
+     *
      * The player "ammo"
      * make it 20 at first "to be calculated after"
-     * 
-     * 
-     * 
+     *
+     *
+     *
      */
     private ShootingParticle[] ammo;
     private int ammoNumber = 60;
     private int timer;
 
     /*
-     * 
+     *
      * updated tomorrow
-     * 
+     *
      */
     private int bulletsPerShot;
     private long lastBulletTime;
 
     /*
-     * 
+     *
      * collision related
-     * 
+     *
      */
-    
-     private double health;
+
+     private double hearts;
+     private Color color;
+
+     private static double score;
 
 
     public Player() {
@@ -83,7 +88,12 @@ public class Player implements PlayerInterface {
 
         lastBulletTime = System.nanoTime();
 
+        hearts = Constants.HEARTS_PER_WAVE;
+
         timer = 0;
+
+        color = Color.BLUE;
+        score = 0;
     }
 
 
@@ -103,15 +113,19 @@ public class Player implements PlayerInterface {
         return h;
     }
 
+    public Color getColor() {
+        return color;
+    }
+
 
 
     public void setX(double x) {
 
-        if (x > Constants.SCREEN_SIZE.getWidth()) {
-            this.x = -w;
+        if (x + w > Constants.SCREEN_SIZE.getWidth()) {
+            this.x = 0;
         }
-        else if (x < -w) {
-            this.x = Constants.SCREEN_SIZE.getWidth();
+        else if (x < 0) {
+            this.x = Constants.SCREEN_SIZE.getWidth() - w;
         }
         else {
             this.x = x;
@@ -120,11 +134,11 @@ public class Player implements PlayerInterface {
 
     public void setY(double y) {
 
-        if (y > Constants.SCREEN_SIZE.getHeight()) {
-            this.y = -h;
+        if (y + h > Constants.SCREEN_SIZE.getHeight()) {
+            this.y = 0;
         }
-        else if (y < -h) {
-            this.y = Constants.SCREEN_SIZE.getHeight();
+        else if (y < 0) {
+            this.y = Constants.SCREEN_SIZE.getHeight() - h;
         }
         else {
             this.y = y;
@@ -179,7 +193,7 @@ public class Player implements PlayerInterface {
     }
 
     private void move(double deltaTime) {
-        
+
         double movingDirections = Math.abs(getXDirect()) + Math.abs(getYDirect());
 
         if (movingDirections != 0) {
@@ -207,10 +221,10 @@ public class Player implements PlayerInterface {
 
 
     public void shoot(double xF, double yF) {
-        
+
 
         if ((System.nanoTime() - lastBulletTime) / 1_000_000_000.0 >= Constants.TIME_BETWEEN_BULLETS) {
-            
+
 
 
             double xDiff = xF - (x + 0.5 * w);
@@ -219,7 +233,7 @@ public class Player implements PlayerInterface {
             double displacement = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
 
             if (displacement > 36) {
-                
+
                 ShootingParticle sp = ammo[Math.abs(timer) % ammoNumber];
 
                 double cosTheta = xDiff / displacement;
@@ -230,10 +244,10 @@ public class Player implements PlayerInterface {
 
 
                 /*
-                 * 
-                 * 
+                 *
+                 *
                  * to be automated
-                 * 
+                 *
                  */
 
 
@@ -274,10 +288,31 @@ public class Player implements PlayerInterface {
 
     }
 
-    public ShootingParticle[] getAmmo() {
-        return ammo;
+    public ShootingParticle getShootingParticle(int i) {
+        return ammo[i];
     }
     public int getAmmoNumber() {
         return ammoNumber;
     }
+
+
+    public void getHit() {
+        hearts -= 1;
+
+
+        color = color.darker();
+
+    }
+    public void resetHearts() {
+        hearts = Constants.HEARTS_PER_WAVE;
+    }
+
+    public static void addToScore(double i) {
+        score += i;
+    }
+
+    public static double getScore() {
+        return score;
+    }
+
 }

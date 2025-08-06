@@ -3,7 +3,7 @@ package Main;
 public class ShootingParticle {
 
     /*
-     * 
+     *
      * used for position
      */
     private double x;
@@ -13,21 +13,22 @@ public class ShootingParticle {
     private double speed;
 
     /*
-     * 
+     *
      * used for direction
-     * 
+     *
      * sin for y
      * cos for x
-     * 
+     *
      */
     private double sinTheta;
     private double cosTheta;
 
 
+
     /*
-     * 
+     *
      * used to determine wether the particle is shooted or not
-     * 
+     *
      */
     private boolean shooted;
     private Player player;
@@ -37,7 +38,10 @@ public class ShootingParticle {
         y = 0;
         w = 20;
         h = 20;
-        speed = Constants.BULLET_SPEED;
+        speed = 300;
+
+
+
 
         shooted = false;
         this.player = player;
@@ -57,19 +61,12 @@ public class ShootingParticle {
 
     public double getW() {
         return w;
-    } 
+    }
 
     public double getH() {
         return h;
     }
 
-
-    /*
-     * 
-     * used for the calculation of the other 2 particles
-     * in the player class
-     * 
-     */
 
     public double getCos() {
         return cosTheta;
@@ -99,19 +96,42 @@ public class ShootingParticle {
         x = player.getX() + 0.5 * (player.getW() - w);
         y = player.getY() + 0.5 * (player.getH() - h);
 
+
         cosTheta = cosT;
         sinTheta = sinT;
+
+        double xDirect = cosTheta / Math.abs(cosTheta);
+        double yDirect = sinTheta / Math.abs(sinTheta);
+
+        if (Math.abs(cosTheta) >= 1 / Math.sqrt(2)){
+            x += 0.5 * (player.getW() + w) * xDirect;
+            y += 0.5 * (player.getH() + h) * sinTheta;
+        }
+        else {
+            x += 0.5 * (player.getW() + w) * cosTheta;
+            y += 0.5 * (player.getH() + h) * yDirect;
+        }
+
+
+        speed = Constants.BULLET_SPEED;
+
+
 
         shooted = true;
 
     }
-    
+
 
     public void update(double deltaTime) {
 
         if (shooted) {
+
+
             x += cosTheta * speed * deltaTime;
             y += sinTheta * speed * deltaTime;
+
+
+            speed += 10;
 
 
             if (x + w < 0 || x > Constants.SCREEN_SIZE.getWidth()
@@ -130,5 +150,5 @@ public class ShootingParticle {
     public boolean isShooted() {
         return shooted;
     }
-    
+
 }
