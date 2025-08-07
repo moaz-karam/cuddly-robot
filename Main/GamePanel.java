@@ -2,6 +2,7 @@ package Main;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Iterator;
 
 import Input.*;
 
@@ -43,9 +44,6 @@ public class GamePanel extends JPanel {
         super.paint(g);
 
 
-
-
-
         g.setColor(player.getColor());
 
 
@@ -63,15 +61,13 @@ public class GamePanel extends JPanel {
         }
 
 
-        for (int i = 0; i < eh.getEnemiesNumber(); i += 1) {
+        for (Iterator<Enemy> iter = eh.getEnemies(); iter.hasNext();) {
 
-            Enemy e = eh.getEnemy(i);
+            Enemy e = iter.next();
 
-            if (e.isActivated()) {
-                g.setColor(e.getColor());
+            g.setColor(e.getColor());
 
-                g.fillRect((int) e.getX(), (int) e.getY(), (int) e.getW(), (int) e.getH());
-            }
+            g.fillRect((int) e.getX(), (int) e.getY(), (int) e.getW(), (int) e.getH());
         }
 
 
@@ -90,8 +86,8 @@ public class GamePanel extends JPanel {
         }
 
         player.update(deltaTime);
-        eh.update(deltaTime);
         ch.update();
+        eh.update(deltaTime);
     }
 
     public void startShooting(double x, double y) {

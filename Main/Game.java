@@ -2,7 +2,7 @@ package Main;
 import java.awt.Toolkit;
 
 import javax.swing.SwingUtilities;
-public class Game implements Runnable{
+public class Game implements Runnable {
 
 
     private Thread gameThread;

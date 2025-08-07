@@ -1,5 +1,8 @@
 package Main;
 
+import java.util.Iterator;
+import java.util.Stack;
+
 public class CollisionHandler {
 
     private Player player;
@@ -13,59 +16,53 @@ public class CollisionHandler {
 
     public void update() {
 
-        for (int t = 0; t < eh.getEnemiesNumber(); t += 1) {
+        for (Iterator<Enemy> iter = eh.getEnemies(); iter.hasNext();) {
 
-            Enemy e = eh.getEnemy(t);
-            
-            if (e.isActivated()) {
+            Enemy e = iter.next();
 
+            double eX = e.getX();
+            double eY = e.getY();
+            double eW = e.getW();
+            double eH = e.getH();
 
-                /*
-                 * 
-                 * check for the player collision
-                 * 
-                 */
-                if (overlap(player.getY(), player.getY() + player.getH(), e.getY(), e.getY() + e.getH())) {
-                    if (overlap(player.getX(), player.getX() + player.getW(), e.getX(), e.getX() + e.getW())) {
-                        player.getHit();
-                        Player.addToScore(-5);
-                        e.deactivate();
-                        continue;
-                    }
+            /*
+             * check for the player collision
+             */
+            if (overlap(player.getY(), player.getY() + player.getH(), eY, eY + eH)) {
+
+                if (overlap(player.getX(), player.getX() + player.getW(), eX, eX + eW)) {
+                    player.getHit();
+                    Player.addToScore(-5);
+                    eh.addEnemyToRemove(e);
+                    continue;
                 }
 
-                
-                for (int i = 0; i < player.getAmmoNumber(); i += 1) {
+            }
 
-                    ShootingParticle sp = player.getShootingParticle(i);
-                    
-                    if (sp.isShooted()) {
+            for (int i = 0; i < player.getAmmoNumber(); i += 1) {
+
+                ShootingParticle sp = player.getShootingParticle(i);
+
+                if (sp.isShooted()) {
+
+                    /*
+                     * check the y overlaping
+                     */
+
+                    if (overlap(sp.getY(), sp.getY() + sp.getH(), eY, eY + eH)) {
 
                         /*
-                         * check the y overlaping
-                         * 
+                         *
+                         * if the y overlaps check if the x overlaps
                          */
 
-                        if (overlap(sp.getY(), sp.getY() + sp.getH(), e.getY(), e.getY() + e.getH())) {
-
-                            /*
-                             *
-                             * if the y overlaps check if the x overlaps 
-                             */
-
-                            if (overlap(sp.getX(), sp.getX() + sp.getW(), e.getX(), e.getX() + e.getW())) {
-                                sp.resetParticle();
-                                e.getHit();
-                                break;
-                            }
-
+                        if (overlap(sp.getX(), sp.getX() + sp.getW(), eX, eX + eW)) {
+                            sp.resetParticle();
+                            eh.getHit(e);
+                            break;
                         }
                     }
-
-
                 }
-
-
             }
         }
 
