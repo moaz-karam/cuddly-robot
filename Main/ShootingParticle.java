@@ -40,9 +40,6 @@ public class ShootingParticle {
         h = 20;
         speed = 300;
 
-
-
-
         shooted = false;
         this.player = player;
     }
@@ -84,41 +81,19 @@ public class ShootingParticle {
     }
 
 
-
-
-
-
-
-
     public void shoot(double cosT, double sinT) {
-
 
         x = player.getX() + 0.5 * (player.getW() - w);
         y = player.getY() + 0.5 * (player.getH() - h);
 
-
         cosTheta = cosT;
         sinTheta = sinT;
 
-        double xDirect = cosTheta / Math.abs(cosTheta);
-        double yDirect = sinTheta / Math.abs(sinTheta);
-
-        if (Math.abs(cosTheta) >= 1 / Math.sqrt(2)){
-            x += 0.5 * (player.getW() + w) * xDirect;
-            y += 0.5 * (player.getH() + h) * sinTheta;
-        }
-        else {
-            x += 0.5 * (player.getW() + w) * cosTheta;
-            y += 0.5 * (player.getH() + h) * yDirect;
-        }
-
+        x += 0.5 * (player.getW() + w) * cosTheta;
+        y += 0.5 * (player.getH() + h) * sinTheta;
 
         speed = Constants.BULLET_SPEED;
-
-
-
         shooted = true;
-
     }
 
 
@@ -130,9 +105,7 @@ public class ShootingParticle {
             x += cosTheta * speed * deltaTime;
             y += sinTheta * speed * deltaTime;
 
-
             speed += 10;
-
 
             if (x + w < 0 || x > Constants.SCREEN_SIZE.getWidth()
                 || y + h < 0 || y > Constants.SCREEN_SIZE.getHeight()) {
@@ -147,7 +120,7 @@ public class ShootingParticle {
         shooted = false;
     }
 
-    public boolean isShooted() {
+    public boolean isShot() {
         return shooted;
     }
 

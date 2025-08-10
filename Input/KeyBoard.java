@@ -18,17 +18,23 @@ public class KeyBoard implements KeyListener {
 
     public void keyPressed(KeyEvent e) {
 
-        if (e.getKeyCode() == KeyEvent.VK_D) {
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             player.startRight();
         }
-        else if (e.getKeyCode() == KeyEvent.VK_A) {
+        else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
             player.startLeft();
         }
-        else if (e.getKeyCode() == KeyEvent.VK_W) {
+        else if (e.getKeyCode() == KeyEvent.VK_UP) {
             player.startUp();
         }
-        else if (e.getKeyCode() == KeyEvent.VK_S) {
+        else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
             player.startDown();
+        }
+        else if (e.getKeyCode() == KeyEvent.VK_X) {
+            player.startShooting();
+        }
+        else if (e.getKeyCode() == KeyEvent.VK_Z) {
+            player.rotate();
         }
 
 
@@ -36,17 +42,20 @@ public class KeyBoard implements KeyListener {
 
     public void keyReleased(KeyEvent e) {
 
-        if (e.getKeyCode() == KeyEvent.VK_D) {
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             player.stopRight();
         }
-        else if (e.getKeyCode() == KeyEvent.VK_A) {
+        else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
             player.stopLeft();
         }
-        else if (e.getKeyCode() == KeyEvent.VK_W) {
+        else if (e.getKeyCode() == KeyEvent.VK_UP) {
             player.stopUp();
         }
-        else if (e.getKeyCode() == KeyEvent.VK_S) {
+        else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
             player.stopDown();
+        }
+        else if (e.getKeyCode() == KeyEvent.VK_X) {
+            player.stopShooting();
         }
     }
 

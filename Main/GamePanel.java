@@ -12,25 +12,17 @@ public class GamePanel extends JPanel {
     private Player player;
     private EnemyHandler eh;
     private CollisionHandler ch;
-    private final int enemiesNumber = 20;
 
-
-    private boolean isShooting;
-    private Point shootingPoint;
 
 
     public GamePanel() {
 
 
         player = new Player();
-        shootingPoint = new Point();
         eh = new EnemyHandler(player);
         ch = new CollisionHandler(player, eh);
 
         this.addKeyListener(new KeyBoard(player, this));
-
-        this.addMouseListener(new Mouse(this));
-        this.addMouseMotionListener(new Mouse(this));
 
         this.setBackground(Color.darkGray);
         this.setMinimumSize(Constants.SCREEN_SIZE);
@@ -53,7 +45,7 @@ public class GamePanel extends JPanel {
 
         for (int i = 0; i < player.getAmmoNumber(); i += 1) {
             ShootingParticle sp = player.getShootingParticle(i);
-            if (sp.isShooted()) {
+            if (sp.isShot()) {
 
                 g.fillRect((int) sp.getX(), (int) sp.getY(), (int) sp.getW(), (int) sp.getH());
 
@@ -80,24 +72,8 @@ public class GamePanel extends JPanel {
     }
 
     public void update(double deltaTime) {
-
-        if (isShooting) {
-            player.shoot(shootingPoint.getX(), shootingPoint.getY());
-        }
-
         player.update(deltaTime);
         ch.update();
         eh.update(deltaTime);
     }
-
-    public void startShooting(double x, double y) {
-        shootingPoint.setLocation(x, y);
-        isShooting = true;
-    }
-
-    public void stopShooting() {
-        isShooting = false;
-    }
-
-
 }

@@ -36,8 +36,8 @@ public class FollowingEnemy implements Enemy {
     /*
      death effect related
      */
-    private long splitTime;
-    private static final double maxSplitTime = 0.25;
+    private long lastSplitTime;
+    private static final double splitTime = 0.25;
 
 
     public FollowingEnemy() {
@@ -55,7 +55,7 @@ public class FollowingEnemy implements Enemy {
 
         health = 100;
         color = Color.GREEN;
-        splitTime = 0;
+        lastSplitTime = 0;
     }
 
 
@@ -119,7 +119,7 @@ public class FollowingEnemy implements Enemy {
         activate(x1, y1, w1);
         cosTheta = -sinT * direct;
         sinTheta = cosT * direct;
-        splitTime = System.nanoTime();
+        lastSplitTime = System.nanoTime();
     }
 
 
@@ -132,7 +132,7 @@ public class FollowingEnemy implements Enemy {
     public void update(Player player, double deltaTime) {
 
 
-        if ((System.nanoTime() - splitTime) / 1_000_000_000.0 >= maxSplitTime) {
+        if ((System.nanoTime() - lastSplitTime) / 1_000_000_000.0 >= splitTime) {
 
             double xPlayer = player.getX() + player.getW() * 0.5;
             double yPlayer = player.getY() + player.getH() * 0.5;

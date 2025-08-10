@@ -1,6 +1,5 @@
 package Main;
 
-import java.awt.*;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Stack;
@@ -16,7 +15,7 @@ public class EnemyHandler {
     private final int enemiesNumber = 5;
 
     private long lastEnemySpawn;
-    private final double spawnTime = 0.5;
+    private final double spawnTime = 0.75;
 
     private Random random;
 
@@ -28,13 +27,13 @@ public class EnemyHandler {
 
         this.player = p;
 
-        startEnemies(player);
+        startEnemies();
 
         lastEnemySpawn = 0;
 
     }
 
-    public void startEnemies(Player player) {
+    public void startEnemies() {
         activatedEnemies = new HashSet<>();
         enemiesToRemove = new HashSet<>();
         deactivatedEnemies = new Stack<>();
@@ -57,7 +56,7 @@ public class EnemyHandler {
 
     private void spawn() {
 
-        if (!deactivatedEnemies.isEmpty()) {
+        if (activatedEnemies.size() < enemiesNumber && !deactivatedEnemies.isEmpty()) {
 
             double x = random.nextDouble(-42, Constants.SCREEN_SIZE.getWidth() + 2);
             double y = random.nextDouble(-42, Constants.SCREEN_SIZE.getHeight() + 2);

@@ -36,5 +36,6 @@ public interface PlayerInterface {
 
 
 
-    void shoot(double x, double y);
+    void startShooting();
+    void stopShooting();
 }

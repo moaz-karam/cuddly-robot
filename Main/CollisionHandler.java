@@ -1,7 +1,6 @@
 package Main;
 
 import java.util.Iterator;
-import java.util.Stack;
 
 public class CollisionHandler {
 
@@ -43,10 +42,10 @@ public class CollisionHandler {
 
                 ShootingParticle sp = player.getShootingParticle(i);
 
-                if (sp.isShooted()) {
+                if (sp.isShot()) {
 
                     /*
-                     * check the y overlaping
+                     * check the y overlapping
                      */
 
                     if (overlap(sp.getY(), sp.getY() + sp.getH(), eY, eY + eH)) {

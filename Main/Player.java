@@ -22,6 +22,7 @@ public class Player implements PlayerInterface {
     private double w;
     private double h;
     private double speed;
+    private boolean shooting;
 
     /*
      *
@@ -46,13 +47,10 @@ public class Player implements PlayerInterface {
      */
     private ShootingParticle[] ammo;
     private int ammoNumber = 60;
+    private final double timeBetweenBullets = 0.1;
     private int timer;
 
-    /*
-     *
-     * updated tomorrow
-     *
-     */
+
     private int bulletsPerShot;
     private long lastBulletTime;
 
@@ -67,6 +65,12 @@ public class Player implements PlayerInterface {
 
      private static double score;
 
+     /*
+     shooting changing direction
+      */
+    private int shootingDirection;
+    private double targetX;
+    private double targetY;
 
     public Player() {
         x = Constants.SCREEN_SIZE.getWidth() / 2;
@@ -86,7 +90,9 @@ public class Player implements PlayerInterface {
             ammo[i] = new ShootingParticle(this);
         }
 
-        lastBulletTime = System.nanoTime();
+        long now = System.nanoTime();
+
+        lastBulletTime = now;
 
         hearts = Constants.HEARTS_PER_WAVE;
 
@@ -94,6 +100,8 @@ public class Player implements PlayerInterface {
 
         color = Color.BLUE;
         score = 0;
+        shooting = false;
+        shootingDirection = (int)mod(now, 4);
     }
 
 
@@ -116,6 +124,7 @@ public class Player implements PlayerInterface {
     public Color getColor() {
         return color;
     }
+
 
 
 
@@ -212,81 +221,75 @@ public class Player implements PlayerInterface {
 
         move(deltaTime);
 
+        if (isShooting()) {
+            shoot();
+        }
+
         for (int i = 0; i < ammoNumber; i += 1) {
             ammo[i].update(deltaTime);
         }
 
     }
 
-
-
-    public void shoot(double xF, double yF) {
-
-
-        if ((System.nanoTime() - lastBulletTime) / 1_000_000_000.0 >= Constants.TIME_BETWEEN_BULLETS) {
-
-
-
-            double xDiff = xF - (x + 0.5 * w);
-            double yDiff = yF - (y + 0.5 * h);
-
-            double displacement = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
-
-            if (displacement > 36) {
-
-                ShootingParticle sp = ammo[Math.abs(timer) % ammoNumber];
-
-                double cosTheta = xDiff / displacement;
-                double sinTheta = yDiff / displacement;
-
-                sp.shoot(cosTheta, sinTheta);
-                timer += 1;
-
-
-                /*
-                 *
-                 *
-                 * to be automated
-                 *
-                 */
-
-
-                sp = ammo[Math.abs(timer) % ammoNumber];
-
-
-                double cos20 = 0.93969;
-                double sin20 = 0.3420;
-
-                /*
-                 * making the other 2 bullets
-                 */
-
-                double cosTheta2 = cosTheta * cos20 - sinTheta * sin20;
-                double sinTheta2 = sinTheta * cos20 + cosTheta * sin20;
-
-                sp.shoot(cosTheta2, sinTheta2);
-                timer += 1;
-
-
-
-
-
-                sp = ammo[Math.abs(timer) % ammoNumber];
-
-
-                double cosTheta3 = cosTheta * cos20 + sinTheta * sin20;
-                double sinTheta3 = sinTheta * cos20 - cosTheta * sin20;
-
-                sp.shoot(cosTheta3, sinTheta3);
-                timer += 1;
-
-
-                lastBulletTime = System.nanoTime();
-            }
-
-        }
-
+    public void startShooting() {
+        shooting = true;
     }
+    public void stopShooting() {
+        shooting = false;
+    }
+
+    private boolean isShooting() {
+        return shooting;
+    }
+
+    private void shoot() {
+
+        long now = System.nanoTime();
+        if ((now - lastBulletTime) / 1_000_000_000.0 >= timeBetweenBullets) {
+            lastBulletTime = now;
+            ShootingParticle sp = ammo[Math.abs(timer) % ammoNumber];
+            timer += 1;
+            updateTargetPoints();
+            sp.shoot(targetX - x, targetY - y);
+        }
+    }
+
+    /*
+    right = 0
+    down = 1
+    left = 2
+    up = 3
+     */
+    public void rotate() {
+        shootingDirection += 1;
+    }
+    private double mod(double num1, double num2) {
+        if (num1 < 0) {
+            return num2 - (-num1 % num2);
+        }
+        return num1 % num2;
+    }
+    private void updateTargetPoints() {
+        switch((int)mod(shootingDirection, 4)) {
+            case 0:
+                targetX = x + 1;
+                targetY = y;
+                break;
+            case 1:
+                targetX = x;
+                targetY = y - 1;
+                break;
+            case 2:
+                targetX = x - 1;
+                targetY = y;
+                break;
+            case 3:
+                targetX = x;
+                targetY = y + 1;
+                break;
+        }
+    }
+
 
     public ShootingParticle getShootingParticle(int i) {
         return ammo[i];
@@ -298,10 +301,7 @@ public class Player implements PlayerInterface {
 
     public void getHit() {
         hearts -= 1;
-
-
         color = color.darker();
-
     }
     public void resetHearts() {
         hearts = Constants.HEARTS_PER_WAVE;
